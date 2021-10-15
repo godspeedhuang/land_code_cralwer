@@ -1,13 +1,23 @@
 import requests
 import json
 import time
+from pyproj import CRS
+from pyproj.transformer import Transformer
+
 
 data = {"type": "FeatureCollection", "features": []}
-inside = {"type": "Feature", "geometry": {"type": "MultiPolygon", "coordinates": [[]]}, "properties": {"縣市": "高雄市", "鄉鎮": "前鎮區", "地段": "經貿段一段", "段號": "", "id": "EC1048",
-                                                                                                       "ymax": "", "ymin": "", "xmax": "", "xmin": "", "xcenter": "", "ycenter": "", "area_id": "EC", "section_id": "1048", "land_id": "", "query_log": [], "query": ""}}
 
-code = 361334
-for i in range(code, code+32):
+# 座標轉換
+crs_84 = CRS.from_epsg(4326)
+crs_97 = CRS.from_epsg(3826)
+transformer = Transformer.from_crs(crs_97, crs_84)
+
+code = [363846, 363847, 363848, 363849, 363850, 363851, 363852, 363853, 363854, 363855, 363856, 363857, 363858, 363859, 363860, 364185,
+        364186, 364187, 364188, 364189, 364190, 364191, 364192, 364193, 364194, 364195, 364196, 364197, 364198, 364199, 364200, 364201]
+# 到23就會出問題，明天再來看看
+for i in code:
+    inside = {"type": "Feature", "geometry": {"type": "MultiPolygon", "coordinates": [[]]}, "properties": {"縣市": "高雄市", "鄉鎮": "前鎮區", "地段": "經貿段一段", "段號": "", "id": "EC1048",
+                                                                                                           "ymax": "", "ymin": "", "xmax": "", "xmin": "", "xcenter": "", "ycenter": "", "area_id": "EC", "section_id": "1048", "land_id": "", "query_log": [], "query": ""}}
     headers_m = {
         'Accept-Encoding': 'gzip, deflate, br',
         'Accept-Language': 'zh-TW,zh;q=0.9,en;q=0.8,en-GB;q=0.7,en-US;q=0.6',
@@ -33,8 +43,16 @@ for i in range(code, code+32):
     request_url = 'https://gisdawh.kcg.gov.tw/landeasy/proxy/proxy2.ashx?https://mapgis2.kcg.gov.tw/server/rest/services/data/KCG_LANDEASY/MapServer/7/query?f=json'
     response = requests.get(request_url, data=form_data, headers=headers_m)
     elements = response.json()
-    inside['geometry']['coordinates'][0].append(
-        elements['features'][0]['geometry']['rings'][0])
+    geo_data = elements['features'][0]['geometry']['rings'][0]
+    trans = []
+    for j in geo_data:
+        geo_list = list(transformer.transform(j[0], j[1]))
+        reverse = [geo_list[1], geo_list[0]]
+        trans.append(reverse)
+    print(trans)
+    # for j in geo_data:
+
+    inside['geometry']['coordinates'][0].append(trans)
     inside['properties']['land_id'] = elements['features'][0]['attributes']['AA49']
     data['features'].append(inside)
     print('success')
