@@ -8,5 +8,11 @@
     - 程式碼 crawler.py
     
 - 基礎資料蒐集：
-  -　全地號資料的蒐集:https://data.kcg.gov.tw/dataset/104-land-value-announcement/resource/ce676e39-e562-4c1d-b9b7-f80c4bba5fa3
+  - 全地號資料的蒐集:https://data.kcg.gov.tw/dataset/104-land-value-announcement/resource/ce676e39-e562-4c1d-b9b7-f80c4bba5fa3
  （高雄市政府資料開放平台／地政局／高雄市104年公告土地現值....檔案類型為csv） 
+    1. 將欲蒐集地段之地號從csv寫成json格式
+      - 程式碼 district.py
+      - 檔案 地段名稱.json
+    2. 將地號json丟進code_api.py裡面，從01010001寫成101-1格式，並丟入爬蟲取得geojson檔
+      - 程式碼 code_api.json 
+      - 檔案 地段名稱_地籍.json
