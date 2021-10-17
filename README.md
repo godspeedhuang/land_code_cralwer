@@ -6,3 +6,7 @@
   - 高雄市：高雄地籍圖資服 https://gisdawh.kcg.gov.tw/landeasy/
     （透過土地資料查詢可以爬到geometry，但query_string沒有找到規則，要去一個對一下，比較適合少量地籍資料的抓取。）
     - 程式碼 crawler.py
+    
+- 基礎資料蒐集：
+  -　全地號資料的蒐集:https://data.kcg.gov.tw/dataset/104-land-value-announcement/resource/ce676e39-e562-4c1d-b9b7-f80c4bba5fa3
+ （高雄市政府資料開放平台／地政局／高雄市104年公告土地現值....檔案類型為csv） 
